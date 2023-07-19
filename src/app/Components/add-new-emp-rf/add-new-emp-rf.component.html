@@ -1,0 +1,98 @@
+<h3 class="bg-success text-light rounded p-3">
+  Employee Form with Reactive Forms
+</h3>
+
+
+<form [formGroup]="employeeForm" (ngSubmit)="Submit()">
+
+  <div class="container">
+    <h4 class="mt-2 mb-2">Employee Detail</h4>
+    <!-- Employee Detail Row -->
+    <div class="row">
+      
+      <div class="col-md-3">
+        <label for="emp_name" class="input-group-text">Employee Name</label>
+        <input class="form-control mt-1 mb-1" type="text" placeholder="Enter Name" formControlName="EmployeeName">
+        <span class="text-danger" *ngIf="this.employeeForm.get('EmployeeName')?.touched && this.employeeForm.get('EmployeeName')?.hasError('required')">*Required </span>
+        <span class="text-danger" *ngIf="this.employeeForm.get('EmployeeName')?.touched && (this.employeeForm.get('EmployeeName')?.hasError('minlength') || this.employeeForm.get('EmployeeName')?.hasError('maxlength'))">*min 3 and max 4 character required</span>            
+      </div>
+  
+      <div class="col-md-3">
+        <label for="Contact" class="input-group-text">Employee Contact</label>
+        <input class="form-control mt-1 mb-1" type="text" placeholder="Enter Contact" formControlName="Contact">
+        <span class="text-danger p-1" *ngIf="this.employeeForm.get('Contact')?.touched && this.employeeForm.get('Contact')?.hasError('required')">*Required</span>
+        <span class="text-danger p-1" *ngIf="this.employeeForm.get('Contact')?.hasError('pattern')
+                && this.employeeForm.get('Contact')?.touched"  >Phone no should be 03**-*******</span>
+      </div>
+  
+      <div class="col-md-3">
+        <label for="Address" class="input-group-text">Address</label>
+        <input  class="form-control mt-1 mb-1" type="text" placeholder="Enter Address" formControlName="Address">
+      </div>
+  
+      <div class="col-md-3">
+        <label for="emp_name" class="input-group-text">Gender</label>
+        <select class="form-control mt- mb-1" formControlName="GenderId">
+          <option value="" selected disabled>Select Gender</option>
+          <option *ngFor="let gender of genderList" [value]="gender.GenderId">{{gender.Gender}}</option>
+        </select>
+        <span class="text-danger p-1" *ngIf="this.employeeForm.get('GenderId')?.touched && this.employeeForm.get('GenderId')?.hasError('required')">*Required</span>
+      </div>
+  
+    </div>
+    <!-- Expense Work From here -->
+  
+    <h4 class="mt-2 mb-2">Expense Detail</h4>
+    <div class="d-flex justify-content-end mb-2">
+      <button class="btn btn-success btn-lg" type="button" (click)="AddNewExpense()">Add New Expense</button>
+    </div>
+
+    <ng-container formArrayName="expenses" *ngFor="let expense of expenseList;let i=index;">
+
+      <div class="row" [formGroupName]="i">
+
+  
+        <div class="col-md-3">
+          <label for="ExpenseName" class="input-group-text">Expense Name</label>
+          <input  class="form-control mt-1 mb-1" type="text" placeholder="Enter Expense Name" formControlName="ExpenseName">
+          <span class="text-danger" *ngIf="this.item.get('ExpenseName')?.touched && this.item.get('ExpenseName')?.hasError('required')" >*Required </span>
+        </div>
+  
+        <div class="col-md-3">
+          <label for="ExpenseType" class="input-group-text">Expense Type</label>
+          <select class="form-control mt- mb-1" formControlName="TypeId">
+            <option value="" selected disabled>Expense Type</option>
+            <option *ngFor="let type of typeList" [value]="type.TypeId">{{type.Type}}</option>
+          </select>
+          <span class="text-danger" *ngIf="this.item.get('Type')?.touched && this.item.get('Type')?.hasError('required')">*Required </span>
+        </div>
+  
+        <div class="col-md-3">
+          <label for="ExpenseDate" class="input-group-text">Expense Date</label>
+          <input  class="form-control mt-1 mb-1" type="datetime-local" formControlName="Date">
+          <span class="text-danger" *ngIf="this.item.get('Date')?.touched && this.item.get('Date')?.hasError('required')">*Required </span>
+        </div>
+        
+        <div class="col-md-3">
+          <label for="ExpenseName" class="input-group-text">Cost</label>
+          <input  class="form-control mt-1 mb-1" type="text" placeholder="Enter Expense Cost" formControlName="Cost">
+          <span class="text-danger" *ngIf="this.item.get('Cost')?.touched && this.item.get('Cost')?.hasError('required')">*Required</span>
+          <span class="text-danger" *ngIf="this.item.get('Cost')?.touched && this.item.get('Cost')?.hasError('max')">Maximum value is 1000.21</span>
+          <span class="text-danger" *ngIf="this.item.get('Cost')?.touched && this.item.get('Cost')?.hasError('pattern')">Invalid format. Accepts up to 2 decimal places.</span>
+        </div>
+
+          <div class="d-flex justify-content-end m-2" *ngIf="expenseList.length>1">
+            <button class="btn btn-danger" (click)="DeleteItem(i)" type="button">Delete</button>
+          </div>
+  
+      </div>
+    
+  </ng-container>
+  </div>
+
+    <div class="text-center m-2">  
+        <button class="btn btn-outline-success">
+          {{ButtonValue}}
+        </button>
+    </div>
+</form>

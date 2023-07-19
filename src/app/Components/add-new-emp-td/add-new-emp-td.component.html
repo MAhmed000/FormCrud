@@ -1,0 +1,219 @@
+<h3 class="bg-success text-light rounded p-3">
+  Employee Form with Template Driven Form
+</h3>
+
+<form #ngForm="ngForm" (ngSubmit)="Submit(ngForm)">
+  <div class="container">
+    <h4 class="mt-2 mb-2">Employee Detail</h4>
+    <div class="row">
+      <div class="col-md-3 mt-1 mb-1">
+        <label for="EmployeeName" class="input-group-text">Employee Name</label>
+        <input
+          type="text"
+          class="form-control mt-1"
+          autocomplete="off"
+          #empName="ngModel"
+          name="EmployeeName"
+          required
+          placeholder="Enter Employee Name"
+          minlength="3"
+          maxlength="14"
+          [(ngModel)]="employee.EmployeeName"
+        />
+        <span
+          class="text-danger p-1"
+          *ngIf="empName.touched && empName.hasError('required')"
+          >*Employee Name Required.</span
+        >
+        <span
+          class="text-danger p-1"
+          *ngIf="
+            empName.touched &&
+            (empName.hasError('minlength') || empName.hasError('maxlength'))
+          "
+          >*Required min character 3 and max 14.</span
+        >
+      </div>
+
+      <div class="col-md-3 mt-1 mb-1">
+        <label for="Contact" class="input-group-text">Contact</label>
+        <input
+          type="text"
+          class="form-control mt-1"
+          autocomplete="off"
+          #contact="ngModel"
+          required
+          name="Contact"
+          placeholder="03**-*******"
+          [(ngModel)]="employee.Contact"
+          pattern="^03\d{2}-\d{7}$"
+        />
+        <span
+          class="text-danger p-1"
+          *ngIf="contact.touched && contact.hasError('required')"
+          >*Contact is Required.</span
+        >
+        <span
+          class="text-danger p-1"
+          *ngIf="contact.touched && contact.hasError('pattern')"
+          >*03**-*******.</span
+        >
+      </div>
+
+      <div class="col-md-3 mt-1 mb-1">
+        <label for="Address" class="input-group-text">Address (optional)</label>
+        <input
+          type="text"
+          class="form-control mt-1"
+          autocomplete="off"
+          name="Address"
+          placeholder="Enter Address"
+          [(ngModel)]="employee.Address"
+        />
+      </div>
+
+      <div class="col-md-3 mt-1 mb-1">
+        <label for="Gender" class="input-group-text">Gender</label>
+        <select
+          name="GenderId"
+          id="GenderId"
+          class="form-control mt-1"
+          required
+          #gender="ngModel"
+          name="GenderId"
+          [(ngModel)]="employee.Gender.GenderId"
+        >
+          <option selected disabled value="">Select Gender</option>
+          <option [value]="gend.GenderId" *ngFor="let gend of genderList">
+            {{ gend.Gender }}
+          </option>
+        </select>
+        <span class="text-danger p-1" *ngIf="gender.touched && gender.invalid"
+          >*Gender is required</span
+        >
+      </div>
+    </div>
+
+    <div class="row">
+      <!--  -->
+      <h4 class="mt-2 mb-2">Expense Detail</h4>
+      <div class="d-flex justify-content-end">
+        <button
+          class="btn btn-success btn-lg"
+          type="button"
+          (click)="AddNewExpense()"
+        >
+          Add New Expense
+        </button>
+      </div>
+
+      <ng-container *ngFor="let expense of employee.expenses; let i = index">
+        <div class="col-md-3 mt-1 mb-1">
+          <label for="ExpenseName" class="input-group-text">Expense Name</label>
+          <input
+            type="text"
+            [name]="'ExpenseName' + i"
+            [id]="'exp_name' + i"
+            required
+            #expname="ngModel"
+            autocomplete="off"
+            class="form-control mt-1"
+            placeholder="Enter Expense Name"
+            [(ngModel)]="expense.ExpenseName"
+          />
+          <span
+            class="text-danger p-1"
+            *ngIf="expname.touched && expname.invalid"
+            >*Expense Name is required.</span
+          >
+        </div>
+
+        <div class="col-md-3 mt-1 mb-1">
+          <label for="Type" class="input-group-text">Type</label>
+          <select
+            [name]="'Type' + i"
+            #expType="ngModel"
+            [id]="'exp_type' + i"
+            class="form-control mt-1"
+            required
+            [(ngModel)]="expense.TypeId"
+          >
+            <option selected disabled value="">Select Type</option>
+            <option [value]="type.TypeId" *ngFor="let type of typesList">
+              {{ type.Type }}
+            </option>
+          </select>
+          <span
+            class="text-danger p-1"
+            *ngIf="expType.touched && expType.invalid"
+            >*Expense Type is required.</span
+          >
+          <!-- <button class="btn btn-primary" (click)="Expense(expense)">Click</button> -->
+        </div>
+
+        <div class="col-md-3 mt-1 mb-1">
+          <label for="Date" class="input-group-text">Date</label>
+          <input
+            type="date"
+            [name]="'Date' + i"
+            [id]="'exp_date' + i"
+            #date="ngModel"
+            required
+            class="form-control mt-1"
+            autocomplete="off"
+            [(ngModel)]="expense.Date"
+          />
+          <span
+            class="text-danger p-1"
+            *ngIf="date.touched && (date.invalid || date.value <= 0)"
+            >*Date is required.</span
+          >
+        </div>
+
+        <div class="col-md-3 mt-1 mb-1">
+          <label for="Cost" class="input-group-text">Cost</label>
+          <input
+            type="number"
+            [name]="'cost' + i"
+            [id]="'exp_cost' + i"
+            (keyup)="TotalCost(this.employee.expenses)"
+            #cost="ngModel"
+            required
+            class="form-control mt-1"
+            autocomplete="off"
+            placeholder="Enter Expense Cost"
+            [(ngModel)]="expense.Cost"
+            max="1000.21"
+            pattern="^\d+(\.\d{1,2})?$"
+          />
+          <span class="text-danger p-1" *ngIf="cost.touched && cost.invalid"
+            >*Cost is required.</span
+          >
+          <span class="text-danger" *ngIf="cost.hasError('max')"
+            >Maximum value is 1000.21</span
+          >
+          <span class="text-danger" *ngIf="cost.hasError('pattern')"
+            >Invalid format. Accepts up to 2 decimal places.</span
+          >
+        </div>
+
+        <div class="d-flex justify-content-end m-2">
+          <button
+            class="btn btn-danger"
+            (click)="DeleteItem(expense)"
+            *ngIf="employee.expenses.length > 1"
+          >
+            Delete
+          </button>
+        </div>
+      </ng-container>
+    </div>
+    <div class="totalcost">{{ totalCost }}</div>
+
+    <div class="text-center m-2">
+      <button class="btn btn-outline-success" [disabled]="ngForm.invalid">
+        {{addEditBtn}}
+      </button>
+    </div>
+  </div>
+</form>

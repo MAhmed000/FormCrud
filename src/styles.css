@@ -1,1 +1,20 @@
 /* You can add global styles to this file, and also import other style files */
+ 
+.totalcost{
+    width: 160px;
+    background-color: #d04747;
+    color: #fff;
+    box-shadow: 5px 5px 7px 2px #000000;
+    padding: 9px;
+    position: absolute;
+    bottom: 4px;
+    right: 2px;
+    font-size: 24px;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.totalcost::before{
+    content: 'Total = ';
+    color: rgba(255, 255, 255, 0.658);
+}
